@@ -1,0 +1,2 @@
+#pragma once
+#define LOCAL_AP_PASSWORD "CHANGE_ME_BEFORE_USE"

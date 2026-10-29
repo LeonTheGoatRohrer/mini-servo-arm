@@ -1,0 +1,15 @@
+title = "p1"
+default_file = "main.kcl"
+
+[settings.app]
+zookeeper_mode = "auto"
+
+[settings.meta]
+id = "e74fdec2-5ed5-4952-a7da-97661fd2039e"
+
+[settings.modeling]
+[cloud."zoo.dev"]
+project_id = "729d78ad-09da-4804-90de-230bfb41b6a8"
+
+[zookeeper."zoo.dev"]
+conversation_ids = [ "fb536621-2b29-4047-bbf1-09fa560ff557" ]

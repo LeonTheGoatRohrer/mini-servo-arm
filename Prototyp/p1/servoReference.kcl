@@ -1,0 +1,43 @@
+// Servo-Einbaureferenz
+// Vereinfachtes HS-325HB-Gehäuse; Horn und Laschen sind Konzeptmaße.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+caseBody = roundPlate(
+  width = servoLength,
+  depth = servoWidth,
+  thick = servoHeight,
+  corner = 1mm,
+)
+  |> translate(x = 10mm, z = -servoHeight, global = true)
+flange = roundPlate(
+  width = 53mm,
+  depth = servoWidth,
+  thick = 2.5mm,
+  corner = 1mm,
+)
+  |> translate(x = 10mm, z = -10mm, global = true)
+caseBlank = union([caseBody, flange])
+mountHole = cylinder(radiusValue = 2.25mm, lengthValue = 5mm)
+  |> translate(
+       x = 10mm - (servoHolePitch / 2),
+       y = -servoHoleRow / 2,
+       z = -11mm,
+       global = true,
+     )
+mountHoleB = clone(mountHole)
+  |> translate(x = servoHolePitch, global = true)
+mountHoleC = clone(mountHole)
+  |> translate(y = servoHoleRow, global = true)
+mountHoleD = clone(mountHoleB)
+  |> translate(y = servoHoleRow, global = true)
+servoCase = subtract(
+  caseBlank,
+  tools = [
+    mountHole,
+    mountHoleB,
+    mountHoleC,
+    mountHoleD
+  ],
+)
+  |> appearance(color = "#262C34")

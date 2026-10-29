@@ -1,0 +1,10 @@
+// Beispielschraube M3
+// Vereinfachter Schaft mit Kopf, ohne Gewinde.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+shaft = cylinder(radiusValue = screwSize / 2, lengthValue = 25mm)
+head = cylinder(radiusValue = 2.8mm, lengthValue = 2.5mm)
+  |> translate(z = 24.5mm, global = true)
+bolt = union([shaft, head])
+  |> appearance(color = "#C5CCD4", metalness = 70)

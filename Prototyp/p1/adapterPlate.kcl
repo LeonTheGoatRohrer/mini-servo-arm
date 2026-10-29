@@ -1,0 +1,26 @@
+// Abnehmbare Greifer-Montageplatte
+// Vier M3-Durchgänge auf veränderbarem 40 x 16 mm Lochbild.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+blank = roundPlate(
+  width = 30mm,
+  depth = 64mm,
+  thick = plateThickness,
+  corner = 4mm,
+)
+hole = cylinder(radiusValue = screwClearance / 2, lengthValue = plateThickness + 2mm)
+  |> translate(
+       x = -gripperPitchZ / 2,
+       y = -gripperPitchY / 2,
+       z = -1mm,
+       global = true,
+     )
+holeB = clone(hole)
+  |> translate(x = gripperPitchZ, global = true)
+holeC = clone(hole)
+  |> translate(y = gripperPitchY, global = true)
+holeD = clone(holeB)
+  |> translate(y = gripperPitchY, global = true)
+adapterPlate = subtract(blank, tools = [hole, holeB, holeC, holeD])
+  |> appearance(color = "#D97643")

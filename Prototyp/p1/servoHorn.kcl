@@ -1,0 +1,15 @@
+// Servo-Abtrieb und Horn
+// Beispiel-Lochkreis, keine nachgebildete Verzahnung.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+stem = cylinder(radiusValue = 3mm, lengthValue = 3mm)
+disc = cylinder(radiusValue = 12mm, lengthValue = 3mm)
+  |> translate(z = 2mm, global = true)
+blank = union([stem, disc])
+hole = cylinder(radiusValue = 1.4mm, lengthValue = 5mm)
+  |> translate(x = hornPitch / 2, z = 1mm, global = true)
+holeB = clone(hole)
+  |> translate(x = -hornPitch, global = true)
+horn = subtract(blank, tools = [hole, holeB])
+  |> appearance(color = "#EEE6CC")

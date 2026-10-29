@@ -1,0 +1,75 @@
+// Schulter-Servohalter
+// Aufrechter Motorträger mit Einbaufenster und Montagefuß.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+panel = roundPlate(
+  width = 72mm,
+  depth = 52mm,
+  thick = plateThickness,
+  corner = 5mm,
+)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(
+       x = 10mm,
+       y = 4mm,
+       z = 26.2mm,
+       global = true,
+     )
+foot = roundPlate(
+  width = 70mm,
+  depth = 20mm,
+  thick = plateThickness,
+  corner = 3mm,
+)
+  |> translate(x = 10mm, y = 8mm, global = true)
+blank = union([panel, foot])
+window = roundPlate(
+  width = servoLength + 0.8mm,
+  depth = servoWidth + 0.8mm,
+  thick = 8mm,
+  corner = 1mm,
+)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(
+       x = 10mm,
+       y = 6mm,
+       z = 36mm,
+       global = true,
+     )
+servoHole = cylinder(radiusValue = 1.7mm, lengthValue = 8mm)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(
+       x = 10mm - (servoHolePitch / 2),
+       y = 6mm,
+       z = 36mm - (servoHoleRow / 2),
+       global = true,
+     )
+servoHoleB = clone(servoHole)
+  |> translate(x = servoHolePitch, global = true)
+servoHoleC = clone(servoHole)
+  |> translate(z = servoHoleRow, global = true)
+servoHoleD = clone(servoHoleB)
+  |> translate(z = servoHoleRow, global = true)
+footHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 6mm)
+  |> translate(
+       x = -17mm,
+       y = 12mm,
+       z = -1mm,
+       global = true,
+     )
+footHoleB = clone(footHole)
+  |> translate(x = 52mm, global = true)
+shoulderMount = subtract(
+  blank,
+  tools = [
+    window,
+    servoHole,
+    servoHoleB,
+    servoHoleC,
+    servoHoleD,
+    footHole,
+    footHoleB
+  ],
+)
+  |> appearance(color = "#31A5AA")

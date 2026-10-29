@@ -1,0 +1,26 @@
+// Gleitauflage des Drehtellers
+// Stationärer Ring mit integrierten Abstandshaltern; Konzept-Gleitlager.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+outerRing = cylinder(radiusValue = 37mm, lengthValue = 4.8mm)
+  |> translate(z = 10mm, global = true)
+innerTool = cylinder(radiusValue = 32mm, lengthValue = 7mm)
+  |> translate(z = 9mm, global = true)
+ring = subtract(outerRing, tools = [innerTool])
+postA = roundPlate(
+  width = 12mm,
+  depth = 14mm,
+  thick = 11mm,
+  corner = 2mm,
+)
+  |> translate(x = -28mm, global = true)
+postB = clone(postA)
+  |> translate(x = 53mm, y = 18mm, global = true)
+blank = union([ring, postA, postB])
+mountHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 17mm)
+  |> translate(x = -28mm, z = -1mm, global = true)
+mountHoleB = clone(mountHole)
+  |> translate(x = 51mm, y = 14mm, global = true)
+supportRing = subtract(blank, tools = [mountHole, mountHoleB])
+  |> appearance(color = "#B1B9C1")

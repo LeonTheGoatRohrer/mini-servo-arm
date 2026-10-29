@@ -1,0 +1,47 @@
+// Druckteile – separate Anordnung
+// Nur acht Kunststoffteile, keine Servos, Hörner oder Metallteile.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import "basePlate.kcl" as basePlate
+import "baseHolder.kcl" as baseHolder
+import "supportRing.kcl" as supportRing
+import "turntable.kcl" as turntable
+import "shoulderMount.kcl" as shoulderMount
+import "bearingBracket.kcl" as bearingBracket
+import "arm.kcl" as arm
+import "adapterPlate.kcl" as adapterPlate
+import * from "parameters.kcl"
+basePrint = basePlate
+  |> translate(x = -100mm, y = -75mm, global = true)
+holderPrint = baseHolder
+  |> rotate(axis = X, angle = 180deg, global = true)
+  |> translate(
+       x = 25mm,
+       y = -85mm,
+       z = 26.5mm + plateThickness,
+       global = true,
+     )
+supportPrint = supportRing
+  |> rotate(axis = X, angle = 180deg, global = true)
+  |> translate(
+       x = 130mm,
+       y = -85mm,
+       z = 14.8mm,
+       global = true,
+     )
+turntablePrint = turntable
+  |> translate(x = -100mm, y = 40mm, global = true)
+shoulderPrint = shoulderMount
+  |> translate(x = 5mm, y = 0mm, global = true)
+bearingPrint = bearingBracket
+  |> translate(x = 75mm, y = 0mm, global = true)
+armPrint = arm
+  |> rotate(axis = Y, angle = 90deg, global = true)
+  |> translate(
+       x = 130mm,
+       y = 30mm,
+       z = armLength + 12mm,
+       global = true,
+     )
+adapterPrint = adapterPlate
+  |> translate(x = 25mm, y = 65mm, global = true)

@@ -1,0 +1,51 @@
+// Basisplatte
+// Vier Tischbefestigungen und vier Halterschrauben.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+blank = roundPlate(
+  width = 112mm,
+  depth = 100mm,
+  thick = plateThickness,
+  corner = 10mm,
+)
+tableHole = cylinder(radiusValue = 2.7mm, lengthValue = plateThickness + 2mm)
+  |> translate(
+       x = 46mm,
+       y = 39mm,
+       z = -1mm,
+       global = true,
+     )
+tableHoleB = clone(tableHole)
+  |> translate(x = -92mm, global = true)
+tableHoleC = clone(tableHole)
+  |> translate(y = -78mm, global = true)
+tableHoleD = clone(tableHoleB)
+  |> translate(y = -78mm, global = true)
+mountHole = cylinder(radiusValue = screwClearance / 2, lengthValue = plateThickness + 2mm)
+  |> translate(
+       x = -28mm,
+       y = -12mm,
+       z = -1mm,
+       global = true,
+     )
+mountHoleB = clone(mountHole)
+  |> translate(x = 66mm, global = true)
+mountHoleC = clone(mountHole)
+  |> translate(y = 24mm, global = true)
+mountHoleD = clone(mountHoleB)
+  |> translate(y = 24mm, global = true)
+basePlate = subtract(
+  blank,
+  tools = [
+    tableHole,
+    tableHoleB,
+    tableHoleC,
+    tableHoleD,
+    mountHole,
+    mountHoleB,
+    mountHoleC,
+    mountHoleD
+  ],
+)
+  |> appearance(color = "#53677A")

@@ -1,0 +1,54 @@
+// Drehhalterung
+// Basis-Servohorn treibt den Teller mit separater Gleitauflage.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+blank = cylinder(radiusValue = 48mm, lengthValue = plateThickness)
+hornHole = cylinder(radiusValue = 1.5mm, lengthValue = 6mm)
+  |> translate(x = hornPitch / 2, z = -1mm, global = true)
+hornHoleB = clone(hornHole)
+  |> translate(x = -hornPitch, global = true)
+centerHole = cylinder(radiusValue = 3.2mm, lengthValue = 6mm)
+  |> translate(z = -1mm, global = true)
+footHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 6mm)
+  |> translate(
+       x = -17mm,
+       y = 12mm,
+       z = -1mm,
+       global = true,
+     )
+footHoleB = clone(footHole)
+  |> translate(x = 52mm, global = true)
+rearHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 6mm)
+  |> translate(
+       x = -9mm,
+       y = 34.5mm,
+       z = -1mm,
+       global = true,
+     )
+rearHoleB = clone(rearHole)
+  |> translate(x = 18mm, global = true)
+stopHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 6mm)
+  |> translate(
+       x = -12mm,
+       y = -40mm,
+       z = -1mm,
+       global = true,
+     )
+stopHoleB = clone(stopHole)
+  |> translate(x = 24mm, global = true)
+turntable = subtract(
+  blank,
+  tools = [
+    hornHole,
+    hornHoleB,
+    centerHole,
+    footHole,
+    footHoleB,
+    rearHole,
+    rearHoleB,
+    stopHole,
+    stopHoleB
+  ],
+)
+  |> appearance(color = "#31A5AA")

@@ -1,0 +1,119 @@
+// Zweiachsiger Prototyp-Roboterarm
+// Getrennte Komponenten; Winkel in Grad, Maße in Millimetern.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+import "basePlate.kcl" as basePlate
+import "baseHolder.kcl" as baseHolder
+import "supportRing.kcl" as supportRing
+import "turntable.kcl" as turntable
+import "shoulderMount.kcl" as shoulderMount
+import "bearingBracket.kcl" as bearingBracket
+import "arm.kcl" as arm
+import "adapterPlate.kcl" as adapterPlate
+import "servoReference.kcl" as servoReference
+import "servoHorn.kcl" as servoHorn
+import "axle.kcl" as axle
+import "bolt.kcl" as bolt
+import "nut.kcl" as nut
+baseAngle = 0deg
+shoulderAngle = 35deg
+turntableHeight = 49.5mm
+shoulderHeight = turntableHeight + plateThickness + 36mm
+// Sichtbare Konstruktionslinien kennzeichnen die beiden Drehachsen.
+baseAxis = sketch(on = XZ) {
+  axisLine = line(start = [var 0mm, var 0mm], end = [var 0mm, var 115mm], construction = true)
+  coincident([axisLine.start, ORIGIN])
+  vertical(axisLine)
+  distance([axisLine.start, axisLine.end]) == 115mm
+}
+shoulderAxisPlane = {
+  origin = [0mm, 0mm, shoulderHeight],
+  xAxis = [-sin(baseAngle), cos(baseAngle), 0],
+  yAxis = [0, 0, 1]
+}
+shoulderAxis = sketch(on = shoulderAxisPlane) {
+  axisLine = line(start = [var -30mm, var 0mm], end = [var 55mm, var 0mm], construction = true)
+  coincident([axisLine.start, [-30mm, 0mm]])
+  horizontal(axisLine)
+  distance([axisLine.start, axisLine.end]) == 85mm
+}
+secondServo = clone(servoReference)
+secondHorn = clone(servoHorn)
+baseServo = servoReference
+  |> translate(z = 44.5mm, global = true)
+baseHorn = servoHorn
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+  |> translate(z = 44.5mm, global = true)
+fixedHolder = baseHolder
+  |> translate(z = plateThickness, global = true)
+thrustSupport = supportRing
+  |> translate(z = 34.5mm, global = true)
+rotatingPlatform = turntable
+  |> translate(z = turntableHeight, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+motorBracket = shoulderMount
+  |> translate(z = turntableHeight + plateThickness, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+passiveBracket = bearingBracket
+  |> translate(y = 32mm, z = turntableHeight + plateThickness, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+shoulderServo = secondServo
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(y = -10mm, z = shoulderHeight, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+shoulderHorn = secondHorn
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> rotate(axis = Y, angle = -shoulderAngle, global = true)
+  |> translate(y = -10mm, z = shoulderHeight, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+movingArm = arm
+  |> rotate(axis = Y, angle = -shoulderAngle, global = true)
+  |> translate(z = shoulderHeight, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+gripperInterface = adapterPlate
+  |> rotate(axis = Y, angle = 90deg, global = true)
+  |> translate(x = armLength + 12mm, y = 12mm, global = true)
+  |> rotate(axis = Y, angle = -shoulderAngle, global = true)
+  |> translate(z = shoulderHeight, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+passiveAxle = axle
+  |> rotate(axis = X, angle = -90deg, global = true)
+  |> translate(y = 31mm, z = shoulderHeight, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+endBolt = bolt
+  |> rotate(axis = Y, angle = 90deg, global = true)
+  |> translate(
+       x = armLength - 8.5mm,
+       y = 12mm - (gripperPitchY / 2),
+       z = -gripperPitchZ / 2,
+       global = true,
+     )
+endBoltB = clone(endBolt)
+  |> translate(y = gripperPitchY, global = true)
+endBoltC = clone(endBolt)
+  |> translate(z = gripperPitchZ, global = true)
+endBoltD = clone(endBoltB)
+  |> translate(z = gripperPitchZ, global = true)
+endNut = nut
+  |> rotate(axis = Y, angle = 90deg, global = true)
+  |> translate(
+       x = armLength - 4.4mm,
+       y = 12mm - (gripperPitchY / 2),
+       z = -gripperPitchZ / 2,
+       global = true,
+     )
+endNutB = clone(endNut)
+  |> translate(y = gripperPitchY, global = true)
+endNutC = clone(endNut)
+  |> translate(z = gripperPitchZ, global = true)
+endNutD = clone(endNutB)
+  |> translate(z = gripperPitchZ, global = true)
+interfaceNuts = [endNut, endNutB, endNutC, endNutD]
+  |> rotate(axis = Y, angle = -shoulderAngle, global = true)
+  |> translate(z = shoulderHeight, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)
+interfaceScrews = [endBolt, endBoltB, endBoltC, endBoltD]
+  |> rotate(axis = Y, angle = -shoulderAngle, global = true)
+  |> translate(z = shoulderHeight, global = true)
+  |> rotate(axis = Z, angle = baseAngle, global = true)

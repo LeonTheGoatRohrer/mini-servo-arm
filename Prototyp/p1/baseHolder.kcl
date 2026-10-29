@@ -1,0 +1,76 @@
+// Basis-Servohalter
+// Offener Träger mit Gehäusefenster und aufgeschraubtem Servo.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+leftLeg = roundPlate(
+  width = 12mm,
+  depth = 34mm,
+  thick = 27mm,
+  corner = 2mm,
+)
+  |> translate(x = -28mm, global = true)
+rightLeg = clone(leftLeg)
+  |> translate(x = 66mm, global = true)
+bridge = roundPlate(
+  width = 78mm,
+  depth = 34mm,
+  thick = plateThickness,
+  corner = 3mm,
+)
+  |> translate(x = 5mm, z = 26.5mm, global = true)
+blank = union([leftLeg, rightLeg, bridge])
+window = roundPlate(
+  width = servoLength + 0.8mm,
+  depth = servoWidth + 0.8mm,
+  thick = 8mm,
+  corner = 1mm,
+)
+  |> translate(x = 10mm, z = 25mm, global = true)
+mountHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 33mm)
+  |> translate(
+       x = -28mm,
+       y = -12mm,
+       z = -1mm,
+       global = true,
+     )
+mountHoleB = clone(mountHole)
+  |> translate(x = 66mm, global = true)
+mountHoleC = clone(mountHole)
+  |> translate(y = 24mm, global = true)
+mountHoleD = clone(mountHoleB)
+  |> translate(y = 24mm, global = true)
+servoHole = cylinder(radiusValue = 1.7mm, lengthValue = 10mm)
+  |> translate(
+       x = 10mm - (servoHolePitch / 2),
+       y = -servoHoleRow / 2,
+       z = 25mm,
+       global = true,
+     )
+servoHoleB = clone(servoHole)
+  |> translate(x = servoHolePitch, global = true)
+servoHoleC = clone(servoHole)
+  |> translate(y = servoHoleRow, global = true)
+servoHoleD = clone(servoHoleB)
+  |> translate(y = servoHoleRow, global = true)
+supportHole = cylinder(radiusValue = 1.3mm, lengthValue = 12mm)
+  |> translate(x = -28mm, z = 20mm, global = true)
+supportHoleB = clone(supportHole)
+  |> translate(x = 51mm, y = 14mm, global = true)
+baseHolder = subtract(
+  blank,
+  tools = [
+    window,
+    mountHole,
+    mountHoleB,
+    mountHoleC,
+    mountHoleD,
+    servoHole,
+    servoHoleB,
+    servoHoleC,
+    servoHoleD,
+    supportHole,
+    supportHoleB
+  ],
+)
+  |> appearance(color = "#6B8499")

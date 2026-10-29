@@ -1,0 +1,51 @@
+// Parameter und Profilwerkzeuge
+// Wiederverwendete, vollständig bemaßte Grundprofile.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+export servoLength = 40mm
+export servoWidth = 20mm
+export servoHeight = 36.5mm
+export servoHolePitch = 47.8mm
+export servoHoleRow = 10.2mm
+export plateThickness = 4mm
+export screwSize = 3mm
+export screwClearance = 3.4mm
+export armLength = 75mm
+export gripperPitchY = 40mm
+export gripperPitchZ = 16mm
+export hornPitch = 16mm
+export fn roundPlate(width, depth, thick, corner) {
+  outline = sketch(on = XY) {
+    bottom = line(start = [var -10mm, var -10mm], end = [var 10mm, var -10mm])
+    right = line(start = [var 10mm, var -10mm], end = [var 10mm, var 10mm])
+    top = line(start = [var 10mm, var 10mm], end = [var -10mm, var 10mm])
+    left = line(start = [var -10mm, var 10mm], end = [var -10mm, var -10mm])
+    coincident([bottom.end, right.start])
+    coincident([right.end, top.start])
+    coincident([top.end, left.start])
+    coincident([left.end, bottom.start])
+    horizontal(bottom)
+    horizontal(top)
+    vertical(left)
+    vertical(right)
+    horizontalDistance([bottom.start, bottom.end]) == width
+    verticalDistance([right.start, right.end]) == depth
+    horizontalDistance([bottom.start, ORIGIN]) == width / 2
+    verticalDistance([bottom.start, ORIGIN]) == depth / 2
+  }
+  face = region(segments = [outline.bottom, outline.right], intersectionIndex = -1, direction = CCW)
+  blank = extrude(face, length = thick)
+  rounded = fillet(blank, radius = corner, edges = [{sideFaces = [face.tags.bottom, face.tags.right]}, {sideFaces = [face.tags.right, face.tags.top]}, {sideFaces = [face.tags.top, face.tags.left]}, {sideFaces = [face.tags.left, face.tags.bottom]}])
+  hide(outline)
+  return rounded
+}
+export fn cylinder(radiusValue, lengthValue) {
+  profile = sketch(on = XY) {
+    rim = circle(center = [var 0mm, var 0mm], start = [var 5mm, var 0mm])
+    coincident([rim.center, ORIGIN])
+    radius(rim) == radiusValue
+    horizontal([rim.center, rim.start])
+  }
+  solid = extrude(region(segments = [profile.rim]), length = lengthValue)
+  hide(profile)
+  return solid
+}

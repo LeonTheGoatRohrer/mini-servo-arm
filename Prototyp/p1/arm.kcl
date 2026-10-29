@@ -1,0 +1,77 @@
+// Leichter Gabelarm
+// Zwei entlastete Wangen verbinden Horn und Gegenlager mit dem Endsteg.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+railBlank = roundPlate(
+  width = armLength + 24mm,
+  depth = 24mm,
+  thick = 5mm,
+  corner = 11mm,
+)
+  |> translate(x = armLength / 2, global = true)
+slot = roundPlate(
+  width = armLength - 30mm,
+  depth = 12mm,
+  thick = 7mm,
+  corner = 5mm,
+)
+  |> translate(x = armLength / 2, z = -1mm, global = true)
+lightRail = subtract(railBlank, tools = [slot])
+driveRail = lightRail
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(y = -15mm, global = true)
+passiveRail = clone(driveRail)
+  |> translate(y = 59mm, global = true)
+endBridge = roundPlate(
+  width = 14mm,
+  depth = 62mm,
+  thick = 22mm,
+  corner = 2mm,
+)
+  |> translate(
+       x = armLength + 5mm,
+       y = 12mm,
+       z = -11mm,
+       global = true,
+     )
+blank = union([driveRail, passiveRail, endBridge])
+driveBore = cylinder(radiusValue = 3.2mm, lengthValue = 9mm)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(y = -13mm, global = true)
+hornHole = cylinder(radiusValue = 1.5mm, lengthValue = 9mm)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(x = hornPitch / 2, y = -13mm, global = true)
+hornHoleB = clone(hornHole)
+  |> translate(x = -hornPitch, global = true)
+passiveBore = cylinder(radiusValue = 2.6mm, lengthValue = 9mm)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(y = 46mm, global = true)
+endHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 16mm)
+  |> rotate(axis = Y, angle = 90deg, global = true)
+  |> translate(
+       x = armLength - 2mm,
+       y = 12mm - (gripperPitchY / 2),
+       z = -gripperPitchZ / 2,
+       global = true,
+     )
+endHoleB = clone(endHole)
+  |> translate(y = gripperPitchY, global = true)
+endHoleC = clone(endHole)
+  |> translate(z = gripperPitchZ, global = true)
+endHoleD = clone(endHoleB)
+  |> translate(z = gripperPitchZ, global = true)
+arm = subtract(
+  blank,
+  tools = [
+    driveBore,
+    hornHole,
+    hornHoleB,
+    passiveBore,
+    endHole,
+    endHoleB,
+    endHoleC,
+    endHoleD
+  ],
+)
+  |> appearance(color = "#EBAB42")

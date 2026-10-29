@@ -1,0 +1,54 @@
+// Schulter-Gegenlager
+// Separater Lagerbock für eine glatte 5-mm-Achse.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+panel = roundPlate(
+  width = 30mm,
+  depth = 50mm,
+  thick = 5mm,
+  corner = 7mm,
+)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(y = 5mm, z = 25mm, global = true)
+foot = roundPlate(
+  width = 30mm,
+  depth = 14mm,
+  thick = plateThickness,
+  corner = 3mm,
+)
+  |> translate(y = 2.5mm, global = true)
+blank = union([panel, foot])
+bore = cylinder(radiusValue = 2.7mm, lengthValue = 9mm)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(y = 7mm, z = 36mm, global = true)
+mountHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 14mm)
+  |> translate(
+       x = -9mm,
+       y = 2.5mm,
+       z = -1mm,
+       global = true,
+     )
+mountHoleB = clone(mountHole)
+  |> translate(x = 18mm, global = true)
+stopHole = cylinder(radiusValue = screwClearance / 2, lengthValue = 9mm)
+  |> rotate(axis = X, angle = 90deg, global = true)
+  |> translate(
+       x = -9mm,
+       y = 7mm,
+       z = 22mm,
+       global = true,
+     )
+stopHoleB = clone(stopHole)
+  |> translate(x = 18mm, global = true)
+bearingBracket = subtract(
+  blank,
+  tools = [
+    bore,
+    mountHole,
+    mountHoleB,
+    stopHole,
+    stopHoleB
+  ],
+)
+  |> appearance(color = "#31A5AA")

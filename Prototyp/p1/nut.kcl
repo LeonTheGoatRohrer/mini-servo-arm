@@ -1,0 +1,10 @@
+// Beispielmutter M3
+// Vereinfachte runde Mutter ohne Gewindeflanken.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+blank = cylinder(radiusValue = 3.2mm, lengthValue = 2.4mm)
+bore = cylinder(radiusValue = screwSize / 2, lengthValue = 4mm)
+  |> translate(z = -0.8mm, global = true)
+nut = subtract(blank, tools = [bore])
+  |> appearance(color = "#C5CCD4", metalness = 70)

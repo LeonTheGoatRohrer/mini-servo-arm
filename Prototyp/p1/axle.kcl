@@ -1,0 +1,10 @@
+// Schulter-Gegenachse
+// Glatter 5-mm-Prüfstift mit Bund; Sicherung später ergänzen.
+@settings(defaultLengthUnit = mm, kclVersion = 3.0)
+
+import * from "parameters.kcl"
+shaft = cylinder(radiusValue = 2.5mm, lengthValue = 14mm)
+head = cylinder(radiusValue = 4mm, lengthValue = 2mm)
+  |> translate(z = 13mm, global = true)
+axle = union([shaft, head])
+  |> appearance(color = "#D1D7DF", metalness = 70)
